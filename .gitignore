@@ -30,3 +30,5 @@ config/local.exs
 .DS_Store
 
 .elixir_ls
+
+/.idea/

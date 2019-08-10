@@ -251,11 +251,35 @@ defmodule Rihanna.Job do
     end
   end
 
+  defp filter_term_list(mod: mod, arg: arg) when not is_nil(mod) and is_list(arg) do
+    Enum.flat_map(retrieve_all_jobs(), fn [id, binary] ->
+      term = :erlang.binary_to_term(binary)
+
+      if match?({^mod, ^arg}, term) do
+        [id]
+      else
+        []
+      end
+    end)
+  end
+
   defp filter_term_list(mod: mod, fun: fun) when not is_nil(mod) and not is_nil(fun) do
     Enum.flat_map(retrieve_all_jobs(), fn [id, binary] ->
       term = :erlang.binary_to_term(binary)
 
       if match?({^mod, ^fun, _}, term) or match?({^mod, ^fun}, term) do
+        [id]
+      else
+        []
+      end
+    end)
+  end
+
+  defp filter_term_list(mod: mod, fun: fun, arg: arg) when not is_nil(mod) and not is_nil(fun) and is_list(arg) do
+    Enum.flat_map(retrieve_all_jobs(), fn [id, binary] ->
+      term = :erlang.binary_to_term(binary)
+
+      if match?({^mod, ^fun, ^arg}, term) do
         [id]
       else
         []
