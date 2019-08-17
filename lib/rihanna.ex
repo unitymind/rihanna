@@ -180,15 +180,9 @@ defmodule Rihanna do
   end
 
   @doc """
-  Deletes all jobs that match either/or module or function.
+  Deletes all jobs that match either/or module or function or arg.
 
   ## Example
-
-  Deletes all jobs for `Module.function`
-
-    ```
-    Rihanna.delete_by(mod: Module, fun: :function)
-    ```
 
   Deletes all jobs for the module `Module`
 
@@ -196,10 +190,34 @@ defmodule Rihanna do
     Rihanna.delete_by(mod: Module)
     ```
 
-  Deletes all jobs for the function `function`
+  Deletes all jobs for any function in the module `Module` with given `arg`
+
+    ```
+    Rihanna.delete_by(mod: Module, arg: [arg1, arg2, ...])
+    ```
+
+  Deletes all jobs for `Module.function`
+
+    ```
+    Rihanna.delete_by(mod: Module, fun: :function)
+    ```
+
+  Deletes all jobs for `Module.function` with given `arg`
+
+    ```
+    Rihanna.delete_by(mod: Module, fun: :function, arg: [arg1, arg2, ...])
+    ```
+
+  Deletes all jobs for the function `function` for any module
 
     ```
     Rihanna.delete_by(fun: :function)
+    ```
+
+  Deletes all jobs for the function `function` with given `arg` for any module
+
+    ```
+    Rihanna.delete_by(fun: :function, arg: [arg1, arg2, ...])
     ```
 
   """

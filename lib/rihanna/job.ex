@@ -251,11 +251,23 @@ defmodule Rihanna.Job do
     end
   end
 
+  defp filter_term_list(mod: mod) when not is_nil(mod) do
+    Enum.flat_map(retrieve_all_jobs(), fn [id, binary] ->
+      term = :erlang.binary_to_term(binary)
+
+      if match?({^mod, _, _}, term) or match?({^mod, _}, term) do
+        [id]
+      else
+        []
+      end
+    end)
+  end
+
   defp filter_term_list(mod: mod, arg: arg) when not is_nil(mod) and is_list(arg) do
     Enum.flat_map(retrieve_all_jobs(), fn [id, binary] ->
       term = :erlang.binary_to_term(binary)
 
-      if match?({^mod, ^arg}, term) do
+      if match?({^mod, ^arg}, term) or match?({^mod, _, ^arg}, term) do
         [id]
       else
         []
@@ -275,23 +287,12 @@ defmodule Rihanna.Job do
     end)
   end
 
-  defp filter_term_list(mod: mod, fun: fun, arg: arg) when not is_nil(mod) and not is_nil(fun) and is_list(arg) do
+  defp filter_term_list(mod: mod, fun: fun, arg: arg)
+       when not is_nil(mod) and not is_nil(fun) and is_list(arg) do
     Enum.flat_map(retrieve_all_jobs(), fn [id, binary] ->
       term = :erlang.binary_to_term(binary)
 
       if match?({^mod, ^fun, ^arg}, term) do
-        [id]
-      else
-        []
-      end
-    end)
-  end
-
-  defp filter_term_list(mod: mod) when not is_nil(mod) do
-    Enum.flat_map(retrieve_all_jobs(), fn [id, binary] ->
-      term = :erlang.binary_to_term(binary)
-
-      if match?({^mod, _, _}, term) or match?({^mod, _}, term) do
         [id]
       else
         []
@@ -304,6 +305,18 @@ defmodule Rihanna.Job do
       term = :erlang.binary_to_term(binary)
 
       if match?({_, ^fun, _}, term) or match?({_, ^fun}, term) do
+        [id]
+      else
+        []
+      end
+    end)
+  end
+
+  defp filter_term_list(fun: fun, arg: arg) when not is_nil(fun) and is_list(arg) do
+    Enum.flat_map(retrieve_all_jobs(), fn [id, binary] ->
+      term = :erlang.binary_to_term(binary)
+
+      if match?({_, ^fun, ^arg}, term) do
         [id]
       else
         []
